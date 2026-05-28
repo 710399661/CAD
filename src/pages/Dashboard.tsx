@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, List, Button, Upload, Card, Typography, Space, Tag, Empty } from 'antd';
+import { Layout, List, Button, Upload, Card, Typography, Space, Tag, Empty, message } from 'antd';
 import { UploadOutlined, FileTextOutlined, FolderOpenOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store';
@@ -7,6 +7,7 @@ import { setCurrentFile, addFile, removeFile } from '../store/slices/files';
 import { CadFile } from '../types';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import type { UploadFile, UploadProps } from 'antd';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -16,17 +17,18 @@ const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { files } = useAppSelector(state => state.files);
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUpload: UploadProps['beforeUpload'] = (file) => {
     const newFile: CadFile = {
       id: Date.now().toString(),
       userId: '1',
       name: file.name,
       type: file.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
-      size: file.size,
-      url: URL.createObjectURL(file),
+      size: file.size || 0,
+      url: URL.createObjectURL(file as File),
       createdAt: new Date().toISOString(),
     };
     dispatch(addFile(newFile));
+    message.success('文件上传成功！');
     return false;
   };
 
