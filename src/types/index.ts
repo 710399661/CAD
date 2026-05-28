@@ -1,53 +1,4 @@
-export interface User {
-  id: stringexport interface User {
-  id: string;
-  email: string;
-  phone?: string;
-  name: string;
-  avatar?: string;
-  createdAt: stringexport interface User {
-  id: string;
-  email: string;
-  phone?: string;
-  name: string;
-  avatar?: string;
-  createdAt: string;
-}
-
-export interface File {
-  id: string;
-  userId: string;
-  name: string;
-  type: string;
-  size: number;
-  url: string;
-  thumbnail?: string;
-  metadata?: Record<string, unknown>;
-  createdAt: string;
-}
-
-export interface Annotation {
-  id: string;
-  fileId: string;
-  type: 'TEXT' | 'DIMENSION' | 'SHAPE';
-  content?: string;
-  position: { x: number; y: number }[];
-  style?: Record<string, unknown>;
-  createdAt: string;
-}
-
-export interface Layer {
-  id: string;
-  name: string;
-  visible: boolean;
-  locked: boolean;
-  color: string;
-}
-
-export interface ViewerState {
-  scale: number;
-  rotation: number;
-  position: { x: number; y: number };
+// 用户类型
 export interface User {
   id: string;
   email: string;
@@ -55,9 +6,11 @@ export interface User {
   name: string;
   avatar?: string;
   createdAt: string;
+  updatedAt: string;
 }
 
-export interface File {
+// 文件类型
+export interface CadFile {
   id: string;
   userId: string;
   name: string;
@@ -65,135 +18,54 @@ export interface File {
   size: number;
   url: string;
   thumbnail?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, any>;
   createdAt: string;
 }
 
+// 标注类型
 export interface Annotation {
   id: string;
   fileId: string;
   type: 'TEXT' | 'DIMENSION' | 'SHAPE';
   content?: string;
-  position: { x: number; y: number }[];
-  style?: Record<string, unknown>;
+  position: {
+    x: number;
+    y: number;
+    [key: string]: any;
+  };
+  style?: Record<string, any>;
   createdAt: string;
 }
 
+// 图层类型
 export interface Layer {
   id: string;
   name: string;
   visible: boolean;
   locked: boolean;
   color: string;
+  opacity: number;
 }
 
+// 测量结果类型
+export interface Measurement {
+  type: 'DISTANCE' | 'AREA' | 'ANGLE';
+  value: number;
+  unit: string;
+  points: Array<{ x: number; y: number }>;
+}
+
+// 工具类型
+export type ToolType = 'SELECT' | 'PAN' | 'ZOOM' | 'DISTANCE' | 'AREA' | 'TEXT' | 'DIMENSION' | 'SHAPE';
+
+// 查看器状态类型
 export interface ViewerState {
-  scale: number;
+  currentTool: ToolType;
+  zoom: number;
+  pan: { x: number; y: number };
   rotation: number;
-  position: { x: number; y: number };
-  activeTool: 'select' | 'pan' | 'zoom' | 'measure' |export interface User {
-  id: string;
-  email: string;
-  phone?: string;
-  name: string;
-  avatar?: string;
-  createdAt: string;
+  showGrid: boolean;
+  layers: Layer[];
+  annotations: Annotation[];
+  measurements: Measurement[];
 }
-
-export interface File {
-  id: string;
-  userId: string;
-  name: string;
-  type: string;
-  size: number;
-  url: string;
-  thumbnail?: string;
-  metadata?: Record<string, unknown>;
-  createdAt: string;
-}
-
-export interface Annotation {
-  id: string;
-  fileId: string;
-  type: 'TEXT' | 'DIMENSION' | 'SHAPE';
-  content?: string;
-  position: { x: number; y: number }[];
-  style?: Record<string, unknown>;
-  createdAt: string;
-}
-
-export interface Layer {
-  id: string;
-  name: string;
-  visible: boolean;
-  locked: boolean;
-  color: string;
-}
-
-export interface ViewerState {
-  scale: number;
-  rotation: number;
-  position: { x: number; y: number };
-  activeTool: 'select' | 'pan' | 'zoom' | 'measure' | 'annotate';
-  selectedLayer?: string;
-}
-
-export interface MeasurePoint {
-export interface User {
-  id: string;
-  email: string;
-  phone?: string;
-  name: string;
-  avatar?: string;
-  createdAt: string;
-}
-
-export interface File {
-  id: string;
-  userId: string;
-  name: string;
-  type: string;
-  size: number;
-  url: string;
-  thumbnail?: string;
-  metadata?: Record<string, unknown>;
-  createdAt: string;
-}
-
-export interface Annotation {
-  id: string;
-  fileId: string;
-  type: 'TEXT' | 'DIMENSION' | 'SHAPE';
-  content?: string;
-  position: { x: number; y: number }[];
-  style?: Record<string, unknown>;
-  createdAt: string;
-}
-
-export interface Layer {
-  id: string;
-  name: string;
-  visible: boolean;
-  locked: boolean;
-  color: string;
-}
-
-export interface ViewerState {
-  scale: number;
-  rotation: number;
-  position: { x: number; y: number };
-  activeTool: 'select' | 'pan' | 'zoom' | 'measure' | 'annotate';
-  selectedLayer?: string;
-}
-
-export interface MeasurePoint {
-  x: number;
-  y: number;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
