@@ -1,13 +1,12 @@
-import React from 'react';
-import { List, Button, Upload, Card, Typography, Space, Tag, Empty, message } from 'antd';
-import { UploadOutlined, FileTextOutlined, FolderOpenOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, { useRef } from 'react';
+import { List, Button, Card, Typography, Space, Tag, Empty, message } from 'antd';
+import { UploadOutlined, FileTextOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store';
 import { setCurrentFile, addFile, removeFile } from '../store/slices/files';
 import { CadFile } from '../types';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import type { UploadProps } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -15,38 +14,41 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { files } = useAppSelector(state => state.files);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload: UploadProps['beforeUpload'] = (file) => {
-    console.log('文件上传触发:', file);
-    try {
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    Array.from(files).forEach(file => {
       const newFile: CadFile = {
-        id: Date.now().toString(),
+        id: Date.now().toString() + Math.random(),
         userId: '1',
         name: file.name,
         type: file.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
-        size: file.size || 0,
-        url: URL.createObjectURL(file as File),
+        size: file.size,
+        url: URL.createObjectURL(file),
         createdAt: new Date().toISOString(),
       };
       dispatch(addFile(newFile));
-      message.success('文件上传成功！');
-    } catch (error) {
-      console.error('上传错误:', error);
-      message.error('上传失败');
+      message.success(`文件 "${file.name}" 上传成功！`);
+    });
+
+    // 清空input以便可以重复选择同一文件
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
-    return false;
   };
 
   const handleFileClick = (file: CadFile) => {
-    console.log('文件点击:', file);
     dispatch(setCurrentFile(file));
     navigate('/viewer');
   };
 
   const handleDeleteFile = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    console.log('删除文件:', id);
     dispatch(removeFile(id));
+    message.success('文件已删除');
   };
 
   return (
@@ -59,20 +61,24 @@ const Dashboard: React.FC = () => {
             <Title level={2}>我的文件</Title>
             <div className="flex items-center justify-between">
               <Text type="secondary">管理您的CAD图纸文件</Text>
-              <Upload
-                beforeUpload={handleFileUpload}
-                showUploadList={false}
-                accept=".dwg,.dxf,.dgn"
-              >
+              <div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileSelect}
+                  accept=".dwg,.dxf,.dgn"
+                  style={{ display: 'none' }}
+                  multiple
+                />
                 <Button 
                   type="primary" 
                   icon={<UploadOutlined />} 
                   size="large"
-                  onClick={() => console.log('上传按钮点击')}
+                  onClick={() => fileInputRef.current?.click()}
                 >
                   上传文件
                 </Button>
-              </Upload>
+              </div>
             </div>
           </div>
 
@@ -87,6 +93,7 @@ const Dashboard: React.FC = () => {
                     onClick={() => handleFileClick(file)}
                     actions={[
                       <Button
+                        key="delete"
                         icon={<DeleteOutlined />}
                         type="text"
                         danger
@@ -112,9 +119,7 @@ const Dashboard: React.FC = () => {
               />
             ) : (
               <Empty
-                image={<FolderOpenOutlined className="text-6xl text-gray-300" />}
                 description="暂无文件，请上传CAD图纸"
-                imageStyle={{ height: 60 }}
               />
             )}
           </Card>
