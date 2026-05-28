@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, List, Button, Upload, Card, Typography, Space, Tag, Empty, message } from 'antd';
+import { List, Button, Upload, Card, Typography, Space, Tag, Empty, message } from 'antd';
 import { UploadOutlined, FileTextOutlined, FolderOpenOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../store';
@@ -9,7 +9,6 @@ import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import type { UploadProps } from 'antd';
 
-const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const Dashboard: React.FC = () => {
@@ -51,11 +50,11 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Layout className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      <Layout>
+      <div className="flex flex-1">
         <Sidebar />
-        <Content className="p-6 bg-gray-50">
+        <div className="flex-1 p-6">
           <div className="mb-6">
             <Title level={2}>我的文件</Title>
             <div className="flex items-center justify-between">
@@ -65,7 +64,12 @@ const Dashboard: React.FC = () => {
                 showUploadList={false}
                 accept=".dwg,.dxf,.dgn"
               >
-                <Button type="primary" icon={<UploadOutlined />} size="large">
+                <Button 
+                  type="primary" 
+                  icon={<UploadOutlined />} 
+                  size="large"
+                  onClick={() => console.log('上传按钮点击')}
+                >
                   上传文件
                 </Button>
               </Upload>
@@ -114,9 +118,9 @@ const Dashboard: React.FC = () => {
               />
             )}
           </Card>
-        </Content>
-      </Layout>
-    </Layout>
+        </div>
+      </div>
+    </div>
   );
 };
 
