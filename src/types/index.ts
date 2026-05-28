@@ -56,7 +56,7 @@ export interface Measurement {
 }
 
 // 工具类型
-export type ToolType = 'SELECT' | 'PAN' | 'ZOOM' | 'DISTANCE' | 'AREA' | 'TEXT' | 'DIMENSION' | 'SHAPE';
+export type ToolType = 'SELECT' | 'PAN' | 'ZOOM' | 'DISTANCE' | 'AREA' | 'ANGLE' | 'TEXT' | 'DIMENSION' | 'SHAPE';
 
 // 查看器状态类型
 export interface ViewerState {

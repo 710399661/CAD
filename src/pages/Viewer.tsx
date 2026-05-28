@@ -1,10 +1,12 @@
 import React from 'react';
-import { Layout, Typography } from 'antd';
+import { Layout, Typography, Tabs } from 'antd';
 import { useAppSelector } from '../store';
 import Header from '../components/Header';
 import Toolbar from '../components/Toolbar';
 import Canvas from '../features/viewer/Canvas';
 import LayerPanel from '../features/layers/LayerPanel';
+import MeasurePanel from '../features/measure/MeasurePanel';
+import TextAnnotation from '../features/annotation/TextAnnotation';
 
 const { Content, Sider } = Layout;
 const { Title } = Typography;
@@ -25,6 +27,24 @@ const Viewer: React.FC = () => {
     );
   }
 
+  const tabItems = [
+    {
+      key: 'layers',
+      label: '图层管理',
+      children: <LayerPanel />,
+    },
+    {
+      key: 'measure',
+      label: '测量工具',
+      children: <MeasurePanel />,
+    },
+    {
+      key: 'annotation',
+      label: '标注工具',
+      children: <TextAnnotation />,
+    },
+  ];
+
   return (
     <Layout className="min-h-screen">
       <Header />
@@ -35,8 +55,8 @@ const Viewer: React.FC = () => {
             <Canvas />
           </div>
         </Content>
-        <Sider width={280} className="bg-white border-l">
-          <LayerPanel />
+        <Sider width={320} className="bg-white border-l">
+          <Tabs defaultActiveKey="layers" items={tabItems} className="p-4" />
         </Sider>
       </Layout>
     </Layout>
