@@ -56,6 +56,7 @@ export default function DashboardScreen({ navigation }: any) {
 
   const handleLogout = () => {
     dispatch(logout());
+    // 不需要手动导航，因为 App.tsx 会根据 auth 状态自动切换
   };
 
   const renderItem = ({ item }: { item: any }) => (

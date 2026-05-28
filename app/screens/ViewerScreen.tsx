@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, PanResponder, GestureResponderEvent } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, PanResponder, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import Svg, { Line, Circle, Polyline, G, Text as SvgText } from 'react-native-svg';
@@ -15,41 +15,60 @@ export default function ViewerScreen({ navigation }: any) {
   const { tool, scale, rotation, panX, panY } = useSelector((state: RootState) => state.viewer);
   const dispatch = useDispatch();
   const viewShotRef = useRef<any>(null);
+  const panRef = useRef({ x: panX, y: panY });
+  const lastPosRef = useRef({ x: 0, y: 0 });
   const [cadDoc, setCadDoc] = useState<any>(null);
   const [measurePoints, setMeasurePoints] = useState<{ x: number; y: number }[]>([]);
   const [measurement, setMeasurement] = useState<string>('');
-  const [isPanning, setIsPanning] = useState(false);
-  const [lastX, setLastX] = useState(0);
-  const [lastY, setLastY] = useState(0);
 
+  // 同步引用到最新的 pan 值
+  useEffect(() => {
+    panRef.current = { x: panX, y: panY };
+  }, [panX, panY]);
+
+  // 加载图纸时居中显示
   useEffect(() => {
     loadCadFile();
-  }, []);
+  }, [currentFile]);
 
   const loadCadFile = async () => {
     const parser = new CADParser();
     const doc = await parser.generateSampleCAD();
     setCadDoc(doc);
+    
+    // 居中显示图纸
+    const { width, height } = Dimensions.get('window');
+    const bounds = doc.bounds;
+    const initialScale = Math.min(
+      (width - 40) / (bounds.maxX - bounds.minX),
+      (height - 300) / (bounds.maxY - bounds.minY),
+      1
+    );
+    dispatch(setScale(initialScale));
+    
+    const centerX = (width - (bounds.maxX - bounds.minX) * initialScale) / 2 - bounds.minX * initialScale;
+    const centerY = (height - 300 - (bounds.maxY - bounds.minY) * initialScale) / 2 - bounds.minY * initialScale;
+    dispatch(setPan({ x: centerX, y: centerY + 100 }));
   };
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderGrant: (evt) => {
-      setIsPanning(true);
-      setLastX(evt.nativeEvent.pageX);
-      setLastY(evt.nativeEvent.pageY);
+      lastPosRef.current = {
+        x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
     },
-    onPanResponderMove: (evt, gestureState) => {
-      if (tool === 'PAN' && isPanning) {
-        const dx = evt.nativeEvent.pageX - lastX;
-        const dy = evt.nativeEvent.pageY - lastY;
-        dispatch(setPan({ x: panX + dx, y: panY + dy }));
-        setLastX(evt.nativeEvent.pageX);
-        setLastY(evt.nativeEvent.pageY);
+    onPanResponderMove: (evt) => {
+      if (tool === 'PAN') {
+        const dx = evt.nativeEvent.pageX - lastPosRef.current.x;
+        const dy = evt.nativeEvent.pageY - lastPosRef.current.y;
+        panRef.current = {
+          x: panRef.current.x + dx,
+          y: panRef.current.y + dy
+        };
+        dispatch(setPan(panRef.current));
+        lastPosRef.current = {
+          x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
       }
-    },
-    onPanResponderRelease: (evt) => {
-      setIsPanning(false);
     },
   });
 
