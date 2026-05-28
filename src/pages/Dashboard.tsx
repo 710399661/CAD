@@ -18,27 +18,35 @@ const Dashboard: React.FC = () => {
   const { files } = useAppSelector(state => state.files);
 
   const handleFileUpload: UploadProps['beforeUpload'] = (file) => {
-    const newFile: CadFile = {
-      id: Date.now().toString(),
-      userId: '1',
-      name: file.name,
-      type: file.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
-      size: file.size || 0,
-      url: URL.createObjectURL(file as File),
-      createdAt: new Date().toISOString(),
-    };
-    dispatch(addFile(newFile));
-    message.success('文件上传成功！');
+    console.log('文件上传触发:', file);
+    try {
+      const newFile: CadFile = {
+        id: Date.now().toString(),
+        userId: '1',
+        name: file.name,
+        type: file.name.split('.').pop()?.toUpperCase() || 'UNKNOWN',
+        size: file.size || 0,
+        url: URL.createObjectURL(file as File),
+        createdAt: new Date().toISOString(),
+      };
+      dispatch(addFile(newFile));
+      message.success('文件上传成功！');
+    } catch (error) {
+      console.error('上传错误:', error);
+      message.error('上传失败');
+    }
     return false;
   };
 
   const handleFileClick = (file: CadFile) => {
+    console.log('文件点击:', file);
     dispatch(setCurrentFile(file));
     navigate('/viewer');
   };
 
   const handleDeleteFile = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    console.log('删除文件:', id);
     dispatch(removeFile(id));
   };
 
