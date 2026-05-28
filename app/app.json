@@ -4,10 +4,8 @@
     "slug": "cad-viewer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,20 +17,19 @@
       "infoPlist": {
         "NSDocumentPickerUsageDescription": "需要访问您的文件来打开CAD图纸",
         "NSPhotoLibraryUsageDescription": "需要访问您的相册来保存导出的图片"
-      }
+      },
+      "bundleIdentifier": "com.example.cadviewer"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
+      "package": "com.example.cadviewer",
+      "versionCode": 1,
       "permissions": [
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO",
+        "READ_MEDIA_AUDIO"
       ]
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-document-picker"
