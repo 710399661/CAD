@@ -8,6 +8,7 @@ import { useAppSelector } from './store';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Viewer from './pages/Viewer';
+import TestPage from './pages/TestPage';
 import './index.css';
 
 const AppContent: React.FC = () => {
@@ -26,6 +27,10 @@ const AppContent: React.FC = () => {
       <Route
         path="/viewer"
         element={isAuthenticated ? <Viewer /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="/test"
+        element={<TestPage />}
       />
     </Routes>
   );
