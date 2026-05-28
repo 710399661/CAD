@@ -7,7 +7,6 @@ const Canvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { zoom, pan, currentTool, showGrid, rotation } = useAppSelector(state => state.viewer);
-  const { currentFile } = useAppSelector(state => state.files);
   
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { List, Switch, Button, Typography, Divider, Space } from 'antd';
+import { List, Button, Typography, Space } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined, LockOutlined, UnlockOutlined, PlusOutlined } from '@ant-design/icons';
 import { useAppSelector, useAppDispatch } from '../../store';
 import { setLayers, updateLayer, addLayer } from '../../store/slices/viewer';

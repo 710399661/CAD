@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Input, Button, Typography } from 'antd';
-
-const { Title } = Typography;
+import { Card, Input, Button } from 'antd';
 
 const TextAnnotation: React.FC = () => {
   const [text, setText] = useState('');

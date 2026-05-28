@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Typography } from 'antd';
 import { useAppSelector } from '../../store';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const DistanceTool: React.FC = () => {
   const { measurements } = useAppSelector(state => state.viewer);

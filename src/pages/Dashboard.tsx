@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Layout, List, Button, Upload, Card, Typography, Space, Tag, Empty, message } from 'antd';
 import { UploadOutlined, FileTextOutlined, FolderOpenOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { setCurrentFile, addFile, removeFile } from '../store/slices/files';
 import { CadFile } from '../types';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
-import type { UploadFile, UploadProps } from 'antd';
+import type { UploadProps } from 'antd';
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
